@@ -5,12 +5,14 @@ let pool;
 
 // Railway provides DATABASE_URL automatically
 if (process.env.DATABASE_URL) {
+  console.log('🚂 Using Railway DATABASE_URL');
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
   });
 } else {
   // Local development
+  console.log('💻 Using local PostgreSQL');
   pool = new Pool({
     host:     process.env.DB_HOST     || 'localhost',
     port:     process.env.DB_PORT     || 5432,

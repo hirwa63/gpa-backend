@@ -30,24 +30,23 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
 
-// ── CORS (allow your frontend to connect) ────────────────
+// ── CORS ──────────────────────────────────────────────────
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ── Rate Limiting (stop spam/attacks) ─────────────────────
+// ── Rate Limiting ─────────────────────────────────────────
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,                  // max 100 requests per 15 min per IP
-  message: { success: false, message: 'Too many requests. Please try again in 15 minutes.' }
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { success: false, message: 'Too many requests. Try again in 15 minutes.' }
 });
-
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10, // only 10 login attempts per 15 min
-  message: { success: false, message: 'Too many login attempts. Please wait 15 minutes.' }
+  max: 10,
+  message: { success: false, message: 'Too many login attempts. Wait 15 minutes.' }
 });
 
 app.use('/api/', limiter);
@@ -77,14 +76,9 @@ app.get('/api/health', (req, res) => {
     success: true,
     message: "God's Plan Academy API is running!",
     version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString()
   });
-});
-
-// ── Serve Frontend (when deployed) ───────────────────────
-app.use(express.static(path.join(__dirname, '../')));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../school_website.html'));
 });
 
 // ── 404 & Error Handlers ──────────────────────────────────
@@ -93,14 +87,13 @@ app.use(errorHandler);
 
 // ── Start Server ──────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log('╔════════════════════════════════════════════╗');
   console.log("║   God's Plan Academy Backend Server        ║");
   console.log('╠════════════════════════════════════════════╣');
   console.log(`║  ✅ Server running on port ${PORT}             ║`);
-  console.log(`║  🌍 http://localhost:${PORT}                  ║`);
-  console.log(`║  📊 API: http://localhost:${PORT}/api/health  ║`);
+  console.log(`║  🌍 Environment: ${process.env.NODE_ENV || 'development'}              ║`);
   console.log('╚════════════════════════════════════════════╝');
   console.log('');
 });

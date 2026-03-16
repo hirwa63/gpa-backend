@@ -1,7 +1,7 @@
 {
   "name": "gpa-backend",
   "version": "1.0.0",
-  "description": "God's Plan Academy Backend API",
+  "description": "God's Plan Academy Backend API - Musanze, Rwanda",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,7 +10,7 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": ["school", "rwanda", "musanze"],
+  "keywords": ["school", "rwanda", "musanze", "api"],
   "author": "God's Plan Academy",
   "license": "ISC",
   "dependencies": {
