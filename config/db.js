@@ -1,15 +1,26 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const pool = new Pool({
-  host:     process.env.DB_HOST,
-  port:     process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user:     process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-});
+let pool;
 
-// Test connection on startup
+// Railway provides DATABASE_URL automatically
+if (process.env.DATABASE_URL) {
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  });
+} else {
+  // Local development
+  pool = new Pool({
+    host:     process.env.DB_HOST     || 'localhost',
+    port:     process.env.DB_PORT     || 5432,
+    database: process.env.DB_NAME     || 'gpa_school',
+    user:     process.env.DB_USER     || 'postgres',
+    password: process.env.DB_PASSWORD || 'gpa2026',
+  });
+}
+
+// Test connection
 pool.connect((err, client, release) => {
   if (err) {
     console.error('❌ Database connection failed:', err.message);
